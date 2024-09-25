@@ -1,4 +1,7 @@
+console.log("Canvas and script loaded");
 const canvas = document.getElementById('gameCanvas');
+console.log(canvas); // Check if canvas is correctly selected
+
 const ctx = canvas.getContext('2d');
 
 let basket = {
