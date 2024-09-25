@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Falling Objects</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #000;
+            background-color: #add8e6;
+        }
+        .score {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .lives {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .time {
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            font-size: 20px;
+            color: #000;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="lives">Lives: <span id="lives">3</span></div>
+    <div class="time">Time: <span id="time">0 Sec</span></div>
+
+
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+    <script src="SkyFallScript.js"></script>
+</body>
+</html>
 
