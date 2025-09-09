@@ -1,4 +1,3 @@
-// Game Configuration
 const GAME_CONFIG = {
     canvas: {
         width: 800,
@@ -26,7 +25,6 @@ const GAME_CONFIG = {
     }
 };
 
-// Game State
 let gameState = {
     isPlaying: false,
     isPaused: false,
@@ -58,12 +56,10 @@ let particles = [];
 let backgroundParticles = [];
 let audioSystem;
 
-// Game Timers
 let gameTimer;
 let objectSpawnTimer;
 let powerUpSpawnTimer;
 
-// Audio System
 class AudioSystem {
     constructor() {
         this.audioContext = null;
@@ -128,16 +124,12 @@ class AudioSystem {
     }
 }
 
-// Initialize game
 function initGame() {
-    // Get canvas and context
     canvas = document.getElementById('gameCanvas');
     ctx = canvas.getContext('2d');
     
-    // Setup responsive canvas
     setupResponsiveCanvas();
     
-    // Initialize basket
     basket = {
         x: canvas.width / 2 - GAME_CONFIG.basket.width / 2,
         y: canvas.height - GAME_CONFIG.basket.height - 20,
@@ -152,40 +144,35 @@ function initGame() {
         originalHeight: GAME_CONFIG.basket.height
     };
     
-    // Initialize audio system
     audioSystem = new AudioSystem();
     
-    // Create background particles
     createBackgroundParticles();
     
-    // Setup event listeners
     setupEventListeners();
     
-    // Update UI
     updateUI();
 }
 
-// Setup responsive canvas
 function setupResponsiveCanvas() {
     const container = canvas.parentElement;
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
     
-    // Calculate scale to fit container
+
     const scaleX = containerWidth / GAME_CONFIG.canvas.width;
     const scaleY = containerHeight / GAME_CONFIG.canvas.height;
     const scale = Math.min(scaleX, scaleY, 1);
     
-    // Set canvas size
+
     canvas.width = GAME_CONFIG.canvas.width;
     canvas.height = GAME_CONFIG.canvas.height;
     canvas.style.width = (GAME_CONFIG.canvas.width * scale) + 'px';
     canvas.style.height = (GAME_CONFIG.canvas.height * scale) + 'px';
 }
 
-// Setup event listeners
+
 function setupEventListeners() {
-    // Keyboard controls
+
     document.addEventListener('keydown', (e) => {
         if (!gameState.isPlaying) return;
         
@@ -224,7 +211,7 @@ function setupEventListeners() {
         }
     });
     
-    // Mouse controls
+
     canvas.addEventListener('mousemove', (e) => {
         if (!gameState.isPlaying) return;
         
@@ -238,14 +225,14 @@ function setupEventListeners() {
     basket.x = mouseX - basket.width / 2;
     basket.y = mouseY - basket.height / 2;
 
-        // Keep basket within canvas bounds
+
         basket.x = Math.max(0, Math.min(canvas.width - basket.width, basket.x));
         basket.y = Math.max(0, Math.min(canvas.height - basket.height, basket.y));
     });
     
     canvas.addEventListener('click', handleTouchpadClick);
     
-    // Touch controls
+
     canvas.addEventListener('touchmove', (e) => {
         if (!gameState.isPlaying) return;
         e.preventDefault();
@@ -261,7 +248,7 @@ function setupEventListeners() {
         basket.x = touchX - basket.width / 2;
         basket.y = touchY - basket.height / 2;
         
-        // Keep basket within canvas bounds
+
         basket.x = Math.max(0, Math.min(canvas.width - basket.width, basket.x));
         basket.y = Math.max(0, Math.min(canvas.height - basket.height, basket.y));
     });
@@ -274,10 +261,10 @@ function setupEventListeners() {
 
 // Start game
 function startGame() {
-    // Hide start menu
+
     document.getElementById('startMenu').classList.add('hidden');
     
-    // Reset game state
+
     gameState = {
         isPlaying: true,
         isPaused: false,
@@ -299,23 +286,23 @@ function startGame() {
         speedBoostTimer: 0
     };
     
-    // Clear arrays
+
     fallingObjects = [];
     slidingObjects = [];
     powerUps = [];
     particles = [];
     
-    // Reset basket position
+
     basket.x = canvas.width / 2 - basket.width / 2;
     basket.y = canvas.height - basket.height - 20;
     basket.trail = [];
     basket.isMoving = false;
     basket.moveTimer = 0;
     
-    // Update UI
+
     updateUI();
     
-    // Start game loop
+
     gameLoop();
     
     // Start timers
@@ -323,33 +310,33 @@ function startGame() {
     updateObjectSpawnTimer();
 }
 
-// Game loop
+
 function gameLoop() {
     if (!gameState.isPlaying) return;
     
-    // Clear canvas
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Update game objects
+
     updateBasket();
     updateObjects();
     updateParticles();
     
-    // Draw everything
+
     drawBasket();
     drawObjects();
     drawParticles();
     
-    // Draw power-up indicator
+
     if (gameState.powerUpActive) {
         drawPowerUpIndicator();
     }
     
-    // Continue loop
+
     requestAnimationFrame(gameLoop);
 }
 
-// Create background particles
+
 function createBackgroundParticles() {
     backgroundParticles = [];
     for (let i = 0; i < GAME_CONFIG.particles.count; i++) {
@@ -363,7 +350,7 @@ function createBackgroundParticles() {
     }
 }
 
-// Animate background particles
+
 function animateBackgroundParticles() {
     backgroundParticles.forEach(particle => {
         particle.y += particle.speed;
@@ -376,7 +363,7 @@ function animateBackgroundParticles() {
     requestAnimationFrame(animateBackgroundParticles);
 }
 
-// Update particles
+
 function updateParticles() {
     particles.forEach((particle, index) => {
         particle.x += particle.dx;
@@ -389,7 +376,7 @@ function updateParticles() {
     });
 }
 
-// Draw particles
+
 function drawParticles() {
     particles.forEach(particle => {
         ctx.save();
@@ -401,7 +388,7 @@ function drawParticles() {
         ctx.restore();
     });
     
-    // Draw background particles
+
     backgroundParticles.forEach(particle => {
         ctx.save();
         ctx.globalAlpha = particle.opacity;
@@ -413,7 +400,7 @@ function drawParticles() {
     });
 }
 
-// Draw basket
+
 function drawBasket() {
     // Draw trail
     basket.trail.forEach((point, index) => {
@@ -427,16 +414,16 @@ function drawBasket() {
         ctx.restore();
     });
     
-    // Draw basket
+
     ctx.save();
     ctx.fillStyle = '#3498db';
     ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
     
-    // Add highlight
+
     ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.fillRect(basket.x + 2, basket.y + 2, basket.width - 4, basket.height - 4);
     
-    // Add border
+
     ctx.strokeStyle = '#2980b9';
     ctx.lineWidth = 2;
     ctx.strokeRect(basket.x, basket.y, basket.width, basket.height);
@@ -444,7 +431,7 @@ function drawBasket() {
     ctx.restore();
 }
 
-// Create particle effects
+
 function createParticles(x, y, color) {
     for (let i = 0; i < 8; i++) {
         particles.push({
@@ -460,7 +447,7 @@ function createParticles(x, y, color) {
     }
 }
 
-// Create explosion effect
+
 function createExplosion(x, y) {
     for (let i = 0; i < 15; i++) {
         particles.push({
@@ -476,7 +463,7 @@ function createExplosion(x, y) {
     }
 }
 
-// Create shield effect
+
 function createShieldEffect(x, y) {
     for (let i = 0; i < 10; i++) {
         particles.push({
@@ -492,7 +479,7 @@ function createShieldEffect(x, y) {
     }
 }
 
-// Detect collision between object and basket
+
 function detectCollision(obj, basket) {
     return obj.x + obj.radius >= basket.x &&
            obj.x - obj.radius <= basket.x + basket.width &&
@@ -500,7 +487,7 @@ function detectCollision(obj, basket) {
            obj.y - obj.radius <= basket.y + basket.height;
 }
 
-// Get random color for objects
+
 function getRandomColor() {
     const colors = [
         '#e74c3c', '#3498db', '#2ecc71', '#f39c12',
@@ -509,13 +496,13 @@ function getRandomColor() {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Spawn falling object
+
 function spawnFallingObject() {
     const radius = GAME_CONFIG.objects.minRadius + Math.random() * (GAME_CONFIG.objects.maxRadius - GAME_CONFIG.objects.minRadius);
     const x = Math.random() * (canvas.width - radius * 2) + radius;
     const color = getRandomColor();
     
-    // Use the current speed multiplier
+
     let speedMultiplier = gameState.speedMultiplier;
     
     fallingObjects.push({
@@ -529,13 +516,13 @@ function spawnFallingObject() {
     });
 }
 
-// Spawn sliding object
+
 function spawnSlidingObject() {
     const radius = GAME_CONFIG.objects.minRadius + Math.random() * (GAME_CONFIG.objects.maxRadius - GAME_CONFIG.objects.minRadius);
     const y = Math.random() * (canvas.height - radius * 2) + radius;
     const color = getRandomColor();
     
-    // Use the current speed multiplier
+
     let speedMultiplier = gameState.speedMultiplier;
     
     slidingObjects.push({
@@ -549,7 +536,7 @@ function spawnSlidingObject() {
     });
 }
 
-// Spawn power-up
+
 function spawnPowerUp() {
     const x = Math.random() * (canvas.width - 30) + 15;
     const y = Math.random() * (canvas.height - 30) + 15;
@@ -584,38 +571,37 @@ function spawnPowerUp() {
     });
 }
 
-// Game over
+
 function gameOver() {
     gameState.isPlaying = false;
     
-    // Clear timers
     if (gameTimer) clearInterval(gameTimer);
     if (objectSpawnTimer) clearInterval(objectSpawnTimer);
     if (powerUpSpawnTimer) clearInterval(powerUpSpawnTimer);
     
-    // Show game over screen
+
     document.getElementById('gameOver').classList.remove('hidden');
     document.getElementById('finalScore').textContent = gameState.score;
     document.getElementById('finalTime').textContent = gameState.time;
     document.getElementById('objectsAvoided').textContent = gameState.objectsAvoided;
     
-    // Play game over sound
+
     audioSystem.play('gameOver');
 }
 
-// Restart game
+
 function restartGame() {
     document.getElementById('gameOver').classList.add('hidden');
     startGame();
 }
 
-// Handle touchpad click
+
 function handleTouchpadClick(e) {
     if (!gameState.isPlaying) return;
     activateSpeedBoost();
 }
 
-// Activate speed boost
+
 function activateSpeedBoost() {
     if (!gameState.speedBoostActive) {
         gameState.speedBoostActive = true;
@@ -624,7 +610,7 @@ function activateSpeedBoost() {
     }
 }
 
-// Update speed boost
+
 function updateSpeedBoost() {
     if (gameState.speedBoostActive) {
         gameState.speedBoostTimer++;
